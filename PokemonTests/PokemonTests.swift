@@ -17,12 +17,13 @@ final class PokemonTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testPokemonsEquality() throws {
+        let pokemon1 = PokemonNWM(name: "Poke1", url: "SameURL")
+        let pokemon2 = PokemonNWM(name: "Poke2", url: "SameURL")
+        let pokemon3 = PokemonNWM(name: "Poke1", url: "DifferentURL")
+
+        XCTAssertEqual(pokemon1, pokemon3, "Pokemons with the same name are the same, as the names should be unique")
+        XCTAssertNotEqual(pokemon1, pokemon2, "Pokemons with different name are unique, even if they have the same URL and thus the same details")
     }
 
     func testPerformanceExample() throws {

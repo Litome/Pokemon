@@ -23,7 +23,6 @@
 		F04F8B252BFCEBCF0049A31B /* CommonNW.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04F8B242BFCEBCF0049A31B /* CommonNW.swift */; };
 		F04F8B262BFCEBCF0049A31B /* CommonNW.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04F8B242BFCEBCF0049A31B /* CommonNW.swift */; };
 		F04F8B282BFDF7C20049A31B /* PokemonsListViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04F8B272BFDF7C20049A31B /* PokemonsListViewVM.swift */; };
-		F04F8B292BFDF7C20049A31B /* PokemonsListViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04F8B272BFDF7C20049A31B /* PokemonsListViewVM.swift */; };
 		F04F8B2B2BFE220B0049A31B /* GetPokemonResp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04F8B2A2BFE220B0049A31B /* GetPokemonResp.swift */; };
 		F04F8B2C2BFE220B0049A31B /* GetPokemonResp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04F8B2A2BFE220B0049A31B /* GetPokemonResp.swift */; };
 		F04F8B2E2BFE22E30049A31B /* getPokemonDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04F8B2D2BFE22E30049A31B /* getPokemonDetails.swift */; };
@@ -399,7 +398,6 @@
 				F04F8B3C2C009D890049A31B /* PokemonVM.swift in Sources */,
 				F04F8AF42BFCB84A0049A31B /* PokemonTests.swift in Sources */,
 				F04F8B202BFCD9570049A31B /* PokemonNWM.swift in Sources */,
-				F04F8B292BFDF7C20049A31B /* PokemonsListViewVM.swift in Sources */,
 				F04F8B362BFE2AAF0049A31B /* GetDetailedPokemonsListPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
