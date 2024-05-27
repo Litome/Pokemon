@@ -8,7 +8,7 @@
 //import SwiftData
 import SwiftUI
 
-let spritePlaceholder = "fossil.shell.fill"
+let spritePlaceholder = "questionmark.square.dashed"
 let loadingIcon = "hourglass"
 let issueIcon = "exclamationmark.triangle"
 
@@ -78,9 +78,9 @@ struct PokemonsListView: View {
     
     var searchResults: [PokemonVM] {
         if searchName.isEmpty {
-            return viewModel.getPokemonsList()
+            return viewModel.getSortedPokemonsList()
         } else {
-            return viewModel.getPokemonsList().filter { $0.name.localizedCaseInsensitiveContains(searchName) }
+            return viewModel.getSortedPokemonsList().filter { $0.name.localizedCaseInsensitiveContains(searchName) }
         }
     }
 }

@@ -20,7 +20,7 @@ func getPokemonsList(_ next: String? = nil) async throws -> GetPokemonsResp? {
             return list
             
         } catch let jsonError {
-            print("Failed to decode json", jsonError)
+            print("getPokemonsList - Failed to decode json", jsonError)
         }
     }
     return nil

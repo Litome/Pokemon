@@ -11,6 +11,7 @@ struct PokemonDetailedView: View {
     @ObservedObject var pokemon: PokemonVM
 
     let squareImgSide = 180.0
+    let titleEdgeInsets = 20.0
     
     var body: some View {
         ZStack {
@@ -18,15 +19,18 @@ struct PokemonDetailedView: View {
                 Text(pokemon.name)
                     .font(.title)
                     .tint(.accentColor)
+                    .padding(titleEdgeInsets)
                 HStack {
                     Spacer()
                     PokemonImgView(spriteUrl: pokemon.spriteFrontUrl, subtitle: "Front")
-                        .scaledToFit()
+                        .scaledToFill()
                         .frame(width: squareImgSide, height: squareImgSide, alignment: .center)
-                    Spacer()
-                    PokemonImgView(spriteUrl: pokemon.spriteBackUrl, subtitle: "Back")
-                        .scaledToFit()
-                        .frame(width: squareImgSide, height: squareImgSide, alignment: .center)
+                    if let url = pokemon.spriteBackUrl {
+                        Spacer()
+                        PokemonImgView(spriteUrl: url, subtitle: "Back")
+                            .scaledToFill()
+                            .frame(width: squareImgSide, height: squareImgSide, alignment: .center)
+                    }
                     Spacer()
                 }
                 Spacer()
@@ -48,10 +52,10 @@ struct PokemonImgView: View {
                     switch phase {
                     case .failure:
                         Image(systemName: issueIcon)
-                            .resizable()
+//                            .resizable()
                     case .empty:
                         Image(systemName: spritePlaceholder)
-                            .resizable()
+//                            .resizable()
                     case .success(let image):
                         image
                             .resizable()
@@ -61,7 +65,7 @@ struct PokemonImgView: View {
                 }
             } else {
                 Image(systemName: spritePlaceholder)
-                    .resizable()
+//                    .resizable()
             }
             Text(subtitle)
                 .font(.caption)

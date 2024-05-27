@@ -35,11 +35,12 @@ class PokemonsNWPresenter {
                                                           spriteBack: details?.sprites.back_default)
                                } else {
                                    // If we can't get any details, do we still want that pokemon in the view model?
-                                   print("Add pokemon \(pokemon.name) even though we don't have any details for it.")
-                                   await model.addPokemon(pokemon.name,
-                                                          details: nil,
-                                                          spriteFront: nil,
-                                                          spriteBack: nil)
+                                   // Ignore for now.
+                                   print("Ignore pokemon \(pokemon.name) as we can't get details for it with url \(pokemon.url).")
+//                                   await model.addPokemon(pokemon.name,
+//                                                          details: nil,
+//                                                          spriteFront: nil,
+//                                                          spriteBack: nil)
                                }
                             }
                         } catch {

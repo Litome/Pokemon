@@ -17,7 +17,7 @@ func getPokemonDetails(_ url: URL) async throws -> GetPokemonResp? {
         let pokemonDetailsResp = try JSONDecoder().decode(GetPokemonResp.self, from: data)
         return pokemonDetailsResp
     } catch let jsonError {
-        print("Failed to decode json", jsonError)
+        print("getPokemonDetails - Failed to decode json with URL \(url.absoluteString)", jsonError)
         return nil
     }
 }

@@ -11,8 +11,8 @@ struct GetPokemonResp: Codable {
     
     /// Information related to a pokemon's sprites
     struct Sprites: Codable {
-        let front_default: String
-        let back_default: String
+        let front_default: String?
+        let back_default: String?
     }
     
     /// Information about the pokemon's species

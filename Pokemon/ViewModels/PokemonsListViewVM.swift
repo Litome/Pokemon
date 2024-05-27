@@ -38,7 +38,7 @@ extension PokemonsListView {
             await nwPresenter.getDetailedPokemonsListPresenter(self)
         }
         
-        func getPokemonsList() -> [PokemonVM] {
+        func getSortedPokemonsList() -> [PokemonVM] {
             return pokemonsList.sorted{ $0.name < $1.name }
         }
         
