@@ -7,12 +7,24 @@
 
 import Foundation
 
-struct PokemonNWM: Codable {
-    let name: String
+class PokemonNWM: Codable, Hashable {
+    
+    let name: String // also unique identifier of a Pokemon
     let url: String
     
     init(name: String = "", url: String = "") {
         self.name = name
         self.url = url
+    }
+    
+    static func == (lhs: PokemonNWM, rhs: PokemonNWM) -> Bool {
+        if lhs.name == rhs.name {
+            return true
+        }
+        return false
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
     }
 }

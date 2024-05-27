@@ -1,24 +1,22 @@
 //
-//  getPokemonsList.swift
+//  getPokemonDetails.swift
 //  Pokemon
 //
-//  Created by Lisandre Taylor on 21/05/2024.
+//  Created by Lisandre Taylor on 22/05/2024.
 //
 
 import Foundation
 
-func getPokemonsList(_ next: String? = nil) async throws -> GetPokemonsResp? {
-    
-    if let url = URL(string: next ?? endpoint + "pokemon") {
+func getPokemonDetails(_ urlString: String) async throws -> GetPokemonResp? {
+    if let url = URL(string: urlString) {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let (data, _) = try await URLSession.shared.data(for: request)
-        
-        do {
-            let list = try JSONDecoder().decode(GetPokemonsResp.self, from: data)
-            return list
             
+        do {
+            let pokemonDetailsResp = try JSONDecoder().decode(GetPokemonResp.self, from: data)
+            return pokemonDetailsResp
         } catch let jsonError {
             print("Failed to decode json", jsonError)
         }
