@@ -53,10 +53,7 @@ struct PokemonsListView: View {
                 .searchable(text: $searchName)
                 .navigationTitle("Pokémons")
                 .navigationDestination(for: PokemonVM.self) { pokemon in
-                    ZStack {
-                        Label(pokemon.name, systemImage: spritePlaceholder)
-                            .font(.largeTitle).bold()
-                    }
+                    PokemonDetailedView(pokemon: pokemon)
                 }
             case .loading:
                 Label("Loading...", systemImage: loadingIcon)

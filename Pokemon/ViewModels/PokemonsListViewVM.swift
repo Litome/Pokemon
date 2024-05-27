@@ -44,7 +44,7 @@ extension PokemonsListView {
             if let detailsURL = pokemon.details {
                 do {
                     let details = try await getPokemonDetails(detailsURL)
-                    if let spriteStr = details?.front_default {
+                    if let spriteStr = details?.sprites.front_default {
                         addSprite(spriteStr, toPokemon: pokemon.name)
                     }
                 } catch {

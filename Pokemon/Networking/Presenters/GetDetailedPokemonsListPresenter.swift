@@ -15,7 +15,7 @@ class PokemonsNWPresenter {
         do {
             await model.startLoading()
             
-            var nwPokemons: [PokemonNWM] = []
+//            var nwPokemons: [PokemonNWM] = []
             
             var pokemonsListResp = try await getPokemonsList()
             repeat {
@@ -24,12 +24,31 @@ class PokemonsNWPresenter {
                     
                     print("Got \(list.count) pokemons from server.")
                     
-                    for pokemon in list.results {
-                        // Populate our View Model with partial NW data
-                        await model.addPokemon(pokemon.name, details: pokemon.url , sprite: nil)
+//                    for pokemon in list.results {
+//                        // Populate our View Model with partial NW data
+//                        await model.addPokemon(pokemon.name, details: pokemon.url , sprite: nil)
+//                    }
+//                    // Keep the list of results so we can concurrently retrieve some details for all the pokemons in the background.
+//                    nwPokemons += list.results
+                    
+                    Task {
+                        do {
+                            try await list.results.concurrentForEach { [model] pokemon in
+                               if let detailsUrl = URL(string: pokemon.url) {
+                                   print("Got a details URL for pokemon \(pokemon.name)")
+                                   let details = try await getPokemonDetails(detailsUrl)
+                                   await model.addPokemon(pokemon.name, details: pokemon.url , sprite: details?.sprites.front_default)
+//                                    if let spriteStr = details?.front_default {
+//                                        print("Add sprite details to pokemon \(pokemon.name)")
+//                                        await model.addSprite(spriteStr, toPokemon: pokemon.name)
+//                                    }
+                                }
+                            }
+                        } catch {
+                            print("Failed to get the details of a pokemon from the server \(error)")
+                            // We might succeed for some of the others...
+                        }
                     }
-                    // Keep the list of results so we can concurrently retrieve some details for all the pokemons in the background.
-                    nwPokemons += list.results
                     
                     print("Added \(list.count) pokemons to model")
                 }
@@ -42,29 +61,30 @@ class PokemonsNWPresenter {
                 }
             } while pokemonsListResp != nil
             
-            // We've got all the names.
-//            model.partiallyLoaded()
-            let allNwPokemons = nwPokemons
+//            // We've got all the names.
+////            model.partiallyLoaded()
+//            let allNwPokemons = nwPokemons
+//            
+//            print("Let's get the sprites now")
+//            Task {
+//                do {
+//                    try await allNwPokemons.concurrentForEach { [model] pokemon in
+////                        if let detailsStr = pokemon.url,
+//                       if let detailsUrl = URL(string: pokemon.url) {
+//                            print("Got a details URL for pokemon \(pokemon.name)")
+//                            let details = try await getPokemonDetails(detailsUrl)
+//                            if let spriteStr = details?.front_default {
+//                                print("Add sprite details to pokemon \(pokemon.name)")
+//                                await model.addSprite(spriteStr, toPokemon: pokemon.name)
+//                            }
+//                        }
+//                    }
+//                } catch {
+//                    print("Failed to get the details of some of the pokemons from the server \(error)")
+//                    // We might succeed for some of the others...
+//                }
+//            }
             
-            print("Let's get the sprites now")
-            Task {
-                do {
-                    try await allNwPokemons.concurrentForEach { [model] pokemon in
-//                        if let detailsStr = pokemon.url,
-                       if let detailsUrl = URL(string: pokemon.url) {
-                            print("Got a details URL for pokemon \(pokemon.name)")
-                            let details = try await getPokemonDetails(detailsUrl)
-                            if let spriteStr = details?.front_default {
-                                print("Add sprite details to pokemon \(pokemon.name)")
-                                await model.addSprite(spriteStr, toPokemon: pokemon.name)
-                            }
-                        }
-                    }
-                } catch {
-                    print("Failed to get the details of some of the pokemons from the server \(error)")
-                    // We might succeed for some of the others...
-                }
-            }
             print("Finished getting all the pokemons sprites url strings")
             await model.finishedLoading()
             
