@@ -20,6 +20,7 @@ I have only used 1 dependency in this app using SwiftPackageManager:
 ### Installing
 
 You can get the code here: https://github.com/Litome/Pokemon
+Use tag "SubmissionTo3SidedCube" or the head of main branch for more recent additions.
 
 ### Executing program
 
