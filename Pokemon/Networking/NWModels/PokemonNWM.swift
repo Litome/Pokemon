@@ -10,7 +10,7 @@ import Foundation
 class PokemonNWM: Codable, Hashable {
     
     let name: String // also unique identifier of a Pokemon
-    let url: String
+    let url: String // Where to find details about this pokemon
     
     init(name: String = "", url: String = "") {
         self.name = name

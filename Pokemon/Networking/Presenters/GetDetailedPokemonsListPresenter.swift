@@ -13,44 +13,50 @@ class PokemonsNWPresenter {
     func getDetailedPokemonsListPresenter(_ model: PokemonNetworking) async {
         
         do {
-            model.startLoading()
-                        
-            var pokemonsList = try await getPokemonsList() 
+            await model.startLoading()
+            
+            var nwPokemons: [PokemonNWM] = []
+            
+            var pokemonsListResp = try await getPokemonsList()
             repeat {
-                if let list = pokemonsList {
+                if let list = pokemonsListResp {
                     print("Retrieve \(list.count) pokemons")
                     
                     print("Got \(list.count) pokemons from server.")
                     
                     for pokemon in list.results {
                         // Populate our View Model with partial NW data
-                        model.addPokemon(pokemon.name, details: pokemon.url , sprite: nil)
+                        await model.addPokemon(pokemon.name, details: pokemon.url , sprite: nil)
                     }
+                    // Keep the list of results so we can concurrently retrieve some details for all the pokemons in the background.
+                    nwPokemons += list.results
+                    
                     print("Added \(list.count) pokemons to model")
                 }
-                if let next = pokemonsList?.next {
+                if let next = pokemonsListResp?.next {
                     print("Let's get the next few pokemons names")
-                    pokemonsList = try await getPokemonsList(next)
+                    pokemonsListResp = try await getPokemonsList(next)
                 } else {
                     print("Finished getting all pokemon's names")
-                    pokemonsList = nil
+                    pokemonsListResp = nil
                 }
-            } while pokemonsList != nil
+            } while pokemonsListResp != nil
             
             // We've got all the names.
 //            model.partiallyLoaded()
+            let allNwPokemons = nwPokemons
             
             print("Let's get the sprites now")
             Task {
                 do {
-                    let pokemons = model.getPokemonsList()
-                    try await pokemons.concurrentForEach { [model] pokemon in
-                        if let detailsString = pokemon.detailsURL {
+                    try await allNwPokemons.concurrentForEach { [model] pokemon in
+//                        if let detailsStr = pokemon.url,
+                       if let detailsUrl = URL(string: pokemon.url) {
                             print("Got a details URL for pokemon \(pokemon.name)")
-                            let details = try await getPokemonDetails(detailsString)
-                            if let spriteString = details?.front_default {
+                            let details = try await getPokemonDetails(detailsUrl)
+                            if let spriteStr = details?.front_default {
                                 print("Add sprite details to pokemon \(pokemon.name)")
-                                model.addSprite(spriteString, toPokemon: pokemon.name)
+                                await model.addSprite(spriteStr, toPokemon: pokemon.name)
                             }
                         }
                     }
@@ -60,11 +66,11 @@ class PokemonsNWPresenter {
                 }
             }
             print("Finished getting all the pokemons sprites url strings")
-            model.finishedLoading()
+            await model.finishedLoading()
             
         } catch {
             print("Failed to get the list of pokemons from the server \(error)")
-            model.failedLoading()
-        }        
+            await model.failedLoading()
+        }
     }
 }

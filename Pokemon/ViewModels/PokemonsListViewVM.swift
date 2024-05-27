@@ -10,6 +10,7 @@ import SwiftUI
 
 extension PokemonsListView {
     
+    @MainActor
     class ViewModel: PokemonNetworking, ObservableObject {
         
         enum LoadingState: Codable {
@@ -27,20 +28,24 @@ extension PokemonsListView {
             self.pokemonsList = pokemonsList
         }
         
-        private func updateLoadingState(_ state: LoadingState) {
-            self.loadingState = state
+        private func updateLoadingState(_ state: LoadingState) async {
+            await MainActor.run { [state] in
+                self.loadingState = state
+            }
         }
         
+        @MainActor
         func getPokemonsFromNW() async {
             await nwPresenter.getDetailedPokemonsListPresenter(self)
         }
         
+        @MainActor
         func getPokemonDetailsFromNW(_ pokemon: PokemonVM) async {
-            if let detailsString = pokemon.detailsURL {
+            if let detailsURL = pokemon.details {
                 do {
-                    let details = try await getPokemonDetails(detailsString)
-                    if let spriteString = details?.front_default {
-                        addSprite(spriteString, toPokemon: pokemon.name)
+                    let details = try await getPokemonDetails(detailsURL)
+                    if let spriteStr = details?.front_default {
+                        addSprite(spriteStr, toPokemon: pokemon.name)
                     }
                 } catch {
                     print("Failed to get pokemon details from NW")
@@ -48,16 +53,19 @@ extension PokemonsListView {
             }
         }
         
+        @MainActor
         func getSprite(_ pokemon: PokemonVM) async -> UIImage? {
-            await getPokemonDetailsFromNW(pokemon)
+            if pokemon.sprite == nil {
+                await getPokemonDetailsFromNW(pokemon)
+            }
             return await pokemon.getSprite()
         }
         
         
         /// PokemonNetworkingProtocol
         
-        func startLoading() {
-            updateLoadingState(.loading)
+        func startLoading() async {
+            await updateLoadingState(.loading)
         }
 //        func partiallyLoaded() {
 //            updateLoadingState(.partiallyLoaded)
@@ -65,19 +73,30 @@ extension PokemonsListView {
 //        func finishedLoading() {
 //            updateLoadingState(.fullyLoaded)
 //        }
-        func finishedLoading() {
-            updateLoadingState(.loaded)
+        func finishedLoading() async {
+            await updateLoadingState(.loaded)
         }
-        func failedLoading() {
-            updateLoadingState(.failed)
+        func failedLoading() async {
+            await updateLoadingState(.failed)
         }
         
-        func addPokemon(_ name: String, details: String?, sprite: String? = nil) {
-            pokemonsList.insert(PokemonVM(name, details: details, sprite: sprite))
+        
+        func addPokemon(_ name: String, details: String?, sprite: String? = nil) async {
+            var detailsURL: URL?
+            if let detailsStr = details {
+                detailsURL = URL(string: detailsStr)
+            }
+            var spriteURL: URL?
+            if let spriteStr = sprite {
+                spriteURL = URL(string: spriteStr)
+            }
+            let (_ ,_) = await MainActor.run {
+                pokemonsList.insert(PokemonVM(name, details: detailsURL, sprite: spriteURL))
+            }
         }
         
         func addSprite(_ sprite: String, toPokemon: String) {
-            pokemonsList.first(where: { $0.name == toPokemon })?.spriteURL = sprite
+            pokemonsList.first(where: { $0.name == toPokemon })?.sprite = URL(string: sprite)
         }
         
         func getPokemonsList() -> [PokemonVM] {
