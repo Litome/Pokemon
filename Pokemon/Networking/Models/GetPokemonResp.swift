@@ -8,26 +8,34 @@
 import Foundation
 
 struct GetPokemonResp: Codable {
+    
+    /// Information related to a pokemon's sprites
     struct Sprites: Codable {
         let front_default: String
         let back_default: String
     }
+    
+    /// Information about the pokemon's species
     struct Species: Codable {
         let name: String
         let url: String
     }
-    let id: Int
-    let name: String
-    let sprites: Sprites
-    let species: Species
-    let height: Int
-    let weight: Int
     
-//    init(id: Int, name:String, front_default: String = "", height: Int = 0, weight: Int = 0) {
-//        self.id = id
-//        self.name = name
-//        self.front_default = front_default
-//        self.height = height
-//        self.weight = weight
-//    }
+    /// Unique ID of a pokemon
+    let id: Int
+    
+    /// Name of a pokemon - also unique
+    let name: String
+    
+    /// Details of the pokemon's sprites
+    let sprites: Sprites
+    
+    /// Details of the pokemon's species
+    let species: Species
+    
+    /// Pokemon's height
+    let height: Int
+    
+    /// Pokemon's weight
+    let weight: Int
 }

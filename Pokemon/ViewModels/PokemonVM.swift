@@ -12,16 +12,32 @@ extension PokemonVM {
     static let samples = [
         PokemonVM("bulbasaur",
                   details: URL(string: "https://pokeapi.co/api/v2/pokemon/1/"),
-                  sprite: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")),
+                  spriteFront: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"),
+                  spriteBack: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png")), //,
+//                  speciesName: "Humanoid",
+//                  height: 100,
+//                  weight: 3000),
         PokemonVM("pigeotto",
                   details: URL(string: "https://pokeapi.co/api/v2/pokemon/17/"),
-                  sprite: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/17.png")),
+                  spriteFront: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/17.png"),
+                  spriteBack: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/17.png")), //,
+//                  speciesName: "Avian",
+//                  height: 30,
+//                  weight: 10),
         PokemonVM("ivysaur",
                   details: URL(string: "https://pokeapi.co/api/v2/pokemon/2/"),
-                  sprite: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png")),
+                  spriteFront: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png"),
+                  spriteBack: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/2.png")), //,
+//                  speciesName: "Reptile",
+//                  height: 60,
+//                  weight: 40),
         PokemonVM("zorua-hisui",
                   details: URL(string: "https://pokeapi.co/api/v2/pokemon/1022/"),
-                  sprite: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1022.png"))
+                  spriteFront: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1022.png"),
+                  spriteBack: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1022.png")) //,
+//                  speciesName: "Fish",
+//                  height: 50,
+//                  weight: 50)
     ]
 }
 
@@ -30,21 +46,28 @@ class PokemonVM: Identifiable, Hashable, Comparable, ObservableObject {
     
     let id: UUID
     let name: String
-    @Published var details: URL?
-    @Published var sprite: URL?
+    let detailsUrl: URL?
+    let spriteFrontUrl: URL?
+    let spriteBackUrl: URL?
+//    let speciesName: String
+//    let height: Int
+//    let weight: Int
     
-    var isFullyLoaded: Bool {
-        if sprite != nil {
-            return true
-        }
-        return false
-    }
-    
-    init(_ name: String, details: URL? = nil, sprite: URL? = nil) {
+    init(_ name: String, 
+         details: URL? = nil,
+         spriteFront: URL? = nil,
+         spriteBack: URL? = nil,
+         speciesName: String = "",
+         height: Int = 0,
+         weight: Int = 0) {
         self.id = UUID()
         self.name = name
-        self.details = details
-        self.sprite = sprite
+        self.detailsUrl = details
+        self.spriteFrontUrl = spriteFront
+        self.spriteBackUrl = spriteBack
+//        self.speciesName = speciesName
+//        self.height = height
+//        self.weight = weight
     }
     
     nonisolated static func == (lhs: PokemonVM, rhs: PokemonVM) -> Bool {
@@ -60,26 +83,6 @@ class PokemonVM: Identifiable, Hashable, Comparable, ObservableObject {
     
     nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(name)
-    }
-    
-    @MainActor
-    func getSprite() async -> UIImage {
-        let placeholder = UIImage(systemName: "fossil.shell.fill")!
-        if let spriteURL = self.sprite {
-            do {
-//                let data = try Data(contentsOf: url)
-//                let image = UIImage(data: data)
-//                return image
-                
-                let request = URLRequest(url: spriteURL)
-                let (data, _) = try await URLSession.shared.data(for: request, delegate: nil)
-                print("Finished loading image")
-                return UIImage(data: data) ?? placeholder
-            } catch {
-                return placeholder
-            }
-        }
-        return placeholder
     }
 }
 

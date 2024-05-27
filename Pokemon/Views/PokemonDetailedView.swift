@@ -9,49 +9,74 @@ import SwiftUI
 
 struct PokemonDetailedView: View {
     @ObservedObject var pokemon: PokemonVM
+
+    let squareImgSide = 180.0
     
     var body: some View {
         ZStack {
             VStack {
-                HStack {
-                    if let sprite = pokemon.sprite {
-                        AsyncImage(url: sprite) { phase in
-                            switch phase {
-                            case .failure:
-                                Image(systemName: issueIcon)
-                                    .resizable()
-                            case .empty:
-                                Image(systemName: spritePlaceholder)
-                                    .resizable()
-                            case .success(let image):
-                                image
-                                    .resizable()
-                            @unknown default:
-                                ProgressView()
-                            }
-                        }
-                        .scaledToFit()
-                        .frame(width: 80.0, height: 80.0, alignment: .center)
-                    } else {
-                        Image(systemName: spritePlaceholder)
-                            .scaledToFit()
-                            .frame(width: 80.0, height: 80.0, alignment: .center)
-                    }
-                }
                 Text(pokemon.name)
                     .font(.title)
                     .tint(.accentColor)
+                HStack {
+                    Spacer()
+                    PokemonImgView(spriteUrl: pokemon.spriteFrontUrl, subtitle: "Front")
+                        .scaledToFit()
+                        .frame(width: squareImgSide, height: squareImgSide, alignment: .center)
+                    Spacer()
+                    PokemonImgView(spriteUrl: pokemon.spriteBackUrl, subtitle: "Back")
+                        .scaledToFit()
+                        .frame(width: squareImgSide, height: squareImgSide, alignment: .center)
+                    Spacer()
+                }
+                Spacer()
             }
-            //                        Label(pokemon.name, systemImage: spritePlaceholder)
-            //                            .font(.largeTitle).bold()
+        }
+    }
+}
+
+struct PokemonImgView: View {
+    
+    var spriteUrl: URL?
+    var subtitle: String
+    
+    var body: some View {
+        VStack {
+            Spacer()
+            if let sprite = spriteUrl {
+                AsyncImage(url: sprite) { phase in
+                    switch phase {
+                    case .failure:
+                        Image(systemName: issueIcon)
+                            .resizable()
+                    case .empty:
+                        Image(systemName: spritePlaceholder)
+                            .resizable()
+                    case .success(let image):
+                        image
+                            .resizable()
+                    @unknown default:
+                        ProgressView()
+                    }
+                }
+            } else {
+                Image(systemName: spritePlaceholder)
+                    .resizable()
+            }
+            Text(subtitle)
+                .font(.caption)
+            Spacer()
         }
     }
 }
 
 struct PokemonDetailedView_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonDetailedView(pokemon: PokemonVM.samples[0])
-            .preferredColorScheme(.light)
-            .previewLayout(.sizeThatFits)
+        NavigationStack {
+            PokemonDetailedView(pokemon: PokemonVM.samples[0])
+                .preferredColorScheme(.light)
+                .previewLayout(.sizeThatFits)
+        }
     }
 }
+

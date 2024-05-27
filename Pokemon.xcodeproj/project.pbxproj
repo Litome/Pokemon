@@ -171,7 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				F04F8B242BFCEBCF0049A31B /* CommonNW.swift */,
-				F04F8B232BFCE6330049A31B /* NWModels */,
+				F04F8B232BFCE6330049A31B /* Models */,
 				F04F8B332BFE2A750049A31B /* Presenters */,
 				F0EF73892C00AAA60012EBBA /* Protocols */,
 				F04F8B222BFCE62A0049A31B /* Requests */,
@@ -191,9 +191,9 @@
 		F04F8B0E2BFCC7590049A31B /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				F04F8AE32BFCB8480049A31B /* PokemonsListView.swift */,
-				F0D13D6D2C049B9600180C74 /* PokemonRowView.swift */,
 				F0D13D702C04F9CC00180C74 /* PokemonDetailedView.swift */,
+				F0D13D6D2C049B9600180C74 /* PokemonRowView.swift */,
+				F04F8AE32BFCB8480049A31B /* PokemonsListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -201,20 +201,20 @@
 		F04F8B222BFCE62A0049A31B /* Requests */ = {
 			isa = PBXGroup;
 			children = (
-				F04F8B172BFCD65F0049A31B /* getPokemonsList.swift */,
 				F04F8B2D2BFE22E30049A31B /* getPokemonDetails.swift */,
+				F04F8B172BFCD65F0049A31B /* getPokemonsList.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
 		};
-		F04F8B232BFCE6330049A31B /* NWModels */ = {
+		F04F8B232BFCE6330049A31B /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				F04F8B2A2BFE220B0049A31B /* GetPokemonResp.swift */,
 				F04F8B1A2BFCD8270049A31B /* GetPokemonsResp.swift */,
 				F04F8B1E2BFCD9570049A31B /* PokemonNWM.swift */,
 			);
-			path = NWModels;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		F04F8B332BFE2A750049A31B /* Presenters */ = {

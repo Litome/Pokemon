@@ -15,7 +15,6 @@ extension PokemonsListView {
         
         enum LoadingState: Codable {
             case loading, loaded, failed
-//            case loading, partiallyLoaded, fullyLoaded, failed
         }
         
         @Published private(set) var loadingState: LoadingState
@@ -39,40 +38,15 @@ extension PokemonsListView {
             await nwPresenter.getDetailedPokemonsListPresenter(self)
         }
         
-        @MainActor
-        func getPokemonDetailsFromNW(_ pokemon: PokemonVM) async {
-            if let detailsURL = pokemon.details {
-                do {
-                    let details = try await getPokemonDetails(detailsURL)
-                    if let spriteStr = details?.sprites.front_default {
-                        addSprite(spriteStr, toPokemon: pokemon.name)
-                    }
-                } catch {
-                    print("Failed to get pokemon details from NW")
-                }
-            }
+        func getPokemonsList() -> [PokemonVM] {
+            return pokemonsList.sorted{ $0.name < $1.name }
         }
-        
-        @MainActor
-        func getSprite(_ pokemon: PokemonVM) async -> UIImage? {
-            if pokemon.sprite == nil {
-                await getPokemonDetailsFromNW(pokemon)
-            }
-            return await pokemon.getSprite()
-        }
-        
         
         /// PokemonNetworkingProtocol
         
         func startLoading() async {
             await updateLoadingState(.loading)
         }
-//        func partiallyLoaded() {
-//            updateLoadingState(.partiallyLoaded)
-//        }
-//        func finishedLoading() {
-//            updateLoadingState(.fullyLoaded)
-//        }
         func finishedLoading() async {
             await updateLoadingState(.loaded)
         }
@@ -80,27 +54,27 @@ extension PokemonsListView {
             await updateLoadingState(.failed)
         }
         
-        
-        func addPokemon(_ name: String, details: String?, sprite: String? = nil) async {
+        func addPokemon(_ name: String, details: String?,
+                        spriteFront: String? = nil,
+                        spriteBack: String? = nil) async {
             var detailsURL: URL?
             if let detailsStr = details {
                 detailsURL = URL(string: detailsStr)
             }
-            var spriteURL: URL?
-            if let spriteStr = sprite {
-                spriteURL = URL(string: spriteStr)
+            var spriteFrontURL: URL?
+            if let spriteFrontStr = spriteFront {
+                spriteFrontURL = URL(string: spriteFrontStr)
+            }
+            var spriteBackURL: URL?
+            if let spriteBackStr = spriteBack {
+                spriteBackURL = URL(string: spriteBackStr)
             }
             let (_ ,_) = await MainActor.run {
-                pokemonsList.insert(PokemonVM(name, details: detailsURL, sprite: spriteURL))
+                pokemonsList.insert(PokemonVM(name,
+                                              details: detailsURL,
+                                              spriteFront: spriteFrontURL,
+                                              spriteBack: spriteBackURL))
             }
-        }
-        
-        func addSprite(_ sprite: String, toPokemon: String) {
-            pokemonsList.first(where: { $0.name == toPokemon })?.sprite = URL(string: sprite)
-        }
-        
-        func getPokemonsList() -> [PokemonVM] {
-            return pokemonsList.sorted{ $0.name < $1.name }
         }
     }
 }

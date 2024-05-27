@@ -9,14 +9,18 @@ import Foundation
 
 class PokemonNWM: Codable, Hashable {
     
-    let name: String // also unique identifier of a Pokemon
-    let url: String // Where to find details about this pokemon
+    /// Pokemon's name - unique
+    let name: String
+    
+    /// Where to get the detailed info for this pokemon
+    let url: String
     
     init(name: String = "", url: String = "") {
         self.name = name
         self.url = url
     }
     
+    /// Codable protocol
     static func == (lhs: PokemonNWM, rhs: PokemonNWM) -> Bool {
         if lhs.name == rhs.name {
             return true
@@ -24,6 +28,7 @@ class PokemonNWM: Codable, Hashable {
         return false
     }
     
+    /// Hashable protocol
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
     }

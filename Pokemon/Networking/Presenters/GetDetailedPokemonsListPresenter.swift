@@ -15,34 +15,32 @@ class PokemonsNWPresenter {
         do {
             await model.startLoading()
             
-//            var nwPokemons: [PokemonNWM] = []
-            
+            // Sequencially and block by block get the whole Pokemon list from the server
+            // This is ordered by id, not names so we need to get all of them.
             var pokemonsListResp = try await getPokemonsList()
             repeat {
                 if let list = pokemonsListResp {
-                    print("Retrieve \(list.count) pokemons")
-                    
                     print("Got \(list.count) pokemons from server.")
-                    
-//                    for pokemon in list.results {
-//                        // Populate our View Model with partial NW data
-//                        await model.addPokemon(pokemon.name, details: pokemon.url , sprite: nil)
-//                    }
-//                    // Keep the list of results so we can concurrently retrieve some details for all the pokemons in the background.
-//                    nwPokemons += list.results
-                    
+
+                    // Concurrently get the detailed info for each pokemon in this block of data
                     Task {
                         do {
                             try await list.results.concurrentForEach { [model] pokemon in
                                if let detailsUrl = URL(string: pokemon.url) {
                                    print("Got a details URL for pokemon \(pokemon.name)")
                                    let details = try await getPokemonDetails(detailsUrl)
-                                   await model.addPokemon(pokemon.name, details: pokemon.url , sprite: details?.sprites.front_default)
-//                                    if let spriteStr = details?.front_default {
-//                                        print("Add sprite details to pokemon \(pokemon.name)")
-//                                        await model.addSprite(spriteStr, toPokemon: pokemon.name)
-//                                    }
-                                }
+                                   await model.addPokemon(pokemon.name, 
+                                                          details: pokemon.url,
+                                                          spriteFront: details?.sprites.front_default,
+                                                          spriteBack: details?.sprites.back_default)
+                               } else {
+                                   // If we can't get any details, do we still want that pokemon in the view model?
+                                   print("Add pokemon \(pokemon.name) even though we don't have any details for it.")
+                                   await model.addPokemon(pokemon.name,
+                                                          details: nil,
+                                                          spriteFront: nil,
+                                                          spriteBack: nil)
+                               }
                             }
                         } catch {
                             print("Failed to get the details of a pokemon from the server \(error)")
@@ -60,30 +58,6 @@ class PokemonsNWPresenter {
                     pokemonsListResp = nil
                 }
             } while pokemonsListResp != nil
-            
-//            // We've got all the names.
-////            model.partiallyLoaded()
-//            let allNwPokemons = nwPokemons
-//            
-//            print("Let's get the sprites now")
-//            Task {
-//                do {
-//                    try await allNwPokemons.concurrentForEach { [model] pokemon in
-////                        if let detailsStr = pokemon.url,
-//                       if let detailsUrl = URL(string: pokemon.url) {
-//                            print("Got a details URL for pokemon \(pokemon.name)")
-//                            let details = try await getPokemonDetails(detailsUrl)
-//                            if let spriteStr = details?.front_default {
-//                                print("Add sprite details to pokemon \(pokemon.name)")
-//                                await model.addSprite(spriteStr, toPokemon: pokemon.name)
-//                            }
-//                        }
-//                    }
-//                } catch {
-//                    print("Failed to get the details of some of the pokemons from the server \(error)")
-//                    // We might succeed for some of the others...
-//                }
-//            }
             
             print("Finished getting all the pokemons sprites url strings")
             await model.finishedLoading()

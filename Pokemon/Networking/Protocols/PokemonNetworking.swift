@@ -9,12 +9,17 @@ import Foundation
 
 protocol PokemonNetworking {
         
+    /// We have started requesting pokemons info from the server
     func startLoading() async
-//    func partiallyLoaded()
+    
+    /// We have successfully finished requesting pokemons info from the server
     func finishedLoading() async
+    
+    /// We failed to get the pokemons info from the server
     func failedLoading() async
     
-    func addPokemon(_ name: String, details: String?, sprite: String?) async
-    func addSprite(_ sprite: String, toPokemon: String) async
-//    func getPokemonsList() -> [PokemonVM]
+    /// We have the info from the server for a given pokemon - add it to the View model
+    func addPokemon(_ name: String, details: String?,
+                    spriteFront: String?,
+                    spriteBack: String?) async
 }

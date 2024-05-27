@@ -15,15 +15,24 @@ let issueIcon = "exclamationmark.triangle"
 //struct Pokemon: Identifiable, Hashable {
 //    var id = UUID()
 //    var name: String
-//    var sprite: String
+//    var spriteFront: String
+//    var spriteBack: String
 //}
 //
 //extension Pokemon {
 //    static let samples = [
-//        Pokemon(name: "bulbasaur", sprite: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"),
-//        Pokemon(name: "pigeotto", sprite: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/17.png"),
-//        Pokemon(name: "ivysaur", sprite: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png"),
-//        Pokemon(name: "zorua-hisui", sprite: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1022.png")
+//        Pokemon(name: "bulbasaur", 
+//                spriteFront: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+//                spriteBack: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png"),
+//        Pokemon(name: "pigeotto",
+//                spriteFront: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/17.png",
+//                spriteBack: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/17.png"),
+//        Pokemon(name: "ivysaur",
+//                spriteFront: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png",
+//                spriteBack: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/2.png"),
+//        Pokemon(name: "zorua-hisui",
+//                spriteFront: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1022.png",
+//                spriteBack: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1022.png")
 //    ]
 //}
 //

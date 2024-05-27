@@ -10,16 +10,11 @@ import SwiftUI
 struct PokemonRowView: View {
     @ObservedObject var pokemon: PokemonVM
     
-//    fileprivate func iconView(_ image: Image) -> Image {
-//        return image
-//            .resizable()
-//            .scaledToFit()
-//            .frame(width: 20.0, height: 20.0, alignment: .center)
-//    }
+    let squareIconSide = 40.0
     
     var listIcon: some View {
-        VStack {
-            if let sprite = pokemon.sprite {
+        ZStack {
+            if let sprite = pokemon.spriteFrontUrl {
                 AsyncImage(url: sprite) { phase in
                     switch phase {
                     case .failure:
@@ -36,11 +31,11 @@ struct PokemonRowView: View {
                     }
                 }
                 .scaledToFit()
-                .frame(width: 20.0, height: 20.0, alignment: .center)
+                .frame(width: squareIconSide, height: squareIconSide, alignment: .center)
             } else {
                 Image(systemName: spritePlaceholder)
                 .scaledToFit()
-                .frame(width: 20.0, height: 20.0, alignment: .center)
+                .frame(width: squareIconSide, height: squareIconSide, alignment: .center)
             }
         }
     }
